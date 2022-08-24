@@ -4,6 +4,9 @@ using NHibernate.Cfg.MappingSchema;
 using NHibernate.Dialect;
 using NHibernate.Mapping.ByCode;
 using PycApi.Context;
+using PycApi.Context.VehicleSession;
+using PycApi.Model;
+using System.ComponentModel;
 
 namespace TechaApiHibernate.StartUpExtension
 {
@@ -35,7 +38,10 @@ namespace TechaApiHibernate.StartUpExtension
 
 
             // inject
-            services.AddScoped<IMapperSession, MapperSession>();
+            services.AddScoped<VehicleIMapperSession, VehicleMapperSession>();
+            services.AddScoped<ContainerIMapperSession, ContainerMapperSession>();
+          
+           
 
             return services;
         }

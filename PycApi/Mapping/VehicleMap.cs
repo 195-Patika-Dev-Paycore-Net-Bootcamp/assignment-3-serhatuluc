@@ -12,7 +12,7 @@ namespace PycApi.Mapping
             Id(x => x.Id, x =>
             {
                 x.Column("id");
-                x.Type(NHibernateUtil.Int64);
+                x.Type(NHibernateUtil.Int32);
                 x.UnsavedValue(0);
                 x.Generator(Generators.Increment);
             });

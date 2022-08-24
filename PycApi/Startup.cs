@@ -45,7 +45,6 @@ namespace PycApi
 
 
             // middleware
-            app.UseMiddleware<HeartbeatMiddleware>();
             app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseHttpsRedirection();

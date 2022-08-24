@@ -7,7 +7,7 @@ namespace PycApi.Model
 {
     public class Vehicle
     {
-        public virtual long Id { get; set; }
+        public virtual int Id { get; set; }
         public virtual string name { get; set; }
         public virtual string plate { get; set; }
     }

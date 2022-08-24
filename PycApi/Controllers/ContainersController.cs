@@ -1,53 +1,52 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PycApi.Context;
-using PycApi.Context.VehicleSession;
 using PycApi.Model;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace PycApi.Controllers
 {
     [ApiController]
     [Route("api/nhb/[controller]")]
-    public class VehicleContoller : ControllerBase
+    public class ContainersContoller : ControllerBase
     {
-        private readonly VehicleIMapperSession session;
-        public VehicleContoller(VehicleIMapperSession session)
+        private readonly ContainerIMapperSession session;
+        public ContainersContoller(ContainerIMapperSession session)
         {
             this.session = session;
         }
 
         [HttpGet]
-        public List<Vehicle> Get()
+        public List<Containers> Get()
         {
-            List<Vehicle> result = session.Vehicles.ToList();
+            List<Containers> result = session.Vehicles.ToList();
             return result;
         }
 
 
         [HttpGet("{id}")]
-        public Vehicle Get(int id)
+        public Containers Get(int id)
         {
-            Vehicle result = session.Vehicles.Where(x => x.Id == id).FirstOrDefault();
+            Containers result = session.Vehicles.Where(x => x.Id == id).FirstOrDefault();
             return result;
         }
 
         [HttpPost]
-        public void Post([FromBody] Vehicle vehicle)
+        public void Post([FromBody] Containers container)
         {
             try
             {
                 session.BeginTransaction();
-                session.Save(vehicle);
+                session.Save(container);
                 session.Commit();
             }
             catch (Exception ex)
             {
                 session.Rollback();
-                Log.Error(ex, "Vehicle Insert Error");
+                Log.Error(ex, "Container Insert Error");
             }
             finally
             {
@@ -56,10 +55,10 @@ namespace PycApi.Controllers
         }
 
         [HttpPut]
-        public ActionResult<Vehicle> Put([FromBody] Vehicle request)
+        public ActionResult<Vehicle> Put([FromBody] Containers request)
         {
-            Vehicle vehicle = session.Vehicles.Where(x => x.Id == request.Id).FirstOrDefault();
-            if (vehicle == null)
+            Containers container = session.Vehicles.Where(x => x.Id == request.Id).FirstOrDefault();
+            if (container == null)
             {
                 return NotFound();
             }
@@ -68,18 +67,19 @@ namespace PycApi.Controllers
             {
                 session.BeginTransaction();
 
-                vehicle.name = request.name;
-                vehicle.plate = request.plate;
+                container.containerName = request.containerName;
+                container.latitude = request.latitude;
+                container.longitude = request.longitude;
 
 
-                session.Update(vehicle);
+                session.Update(container);
 
                 session.Commit();
             }
             catch (Exception ex)
             {
                 session.Rollback();
-                Log.Error(ex, "Vehicle Insert Error");
+                Log.Error(ex, "Containers Insert Error");
             }
             finally
             {
@@ -92,9 +92,9 @@ namespace PycApi.Controllers
 
 
         [HttpDelete("{id}")]
-        public ActionResult<Vehicle> Delete(int id)
+        public ActionResult<Containers> Delete(int id)
         {
-            Vehicle book = session.Vehicles.Where(x => x.Id == id).FirstOrDefault();
+            Containers book = session.Vehicles.Where(x => x.Id == id).FirstOrDefault();
             if (book == null)
             {
                 return NotFound();
