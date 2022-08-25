@@ -2,11 +2,11 @@
 using PycApi.Context;
 using PycApi.Context.VehicleSession;
 using PycApi.Model;
+using PycApi.Models_Dto.Dto;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace PycApi.Controllers
 {
@@ -37,9 +37,17 @@ namespace PycApi.Controllers
             return result;
         }
 
+
+       
+
         [HttpPost]
-        public void Post([FromBody] Vehicle vehicle)
+        public void Post([FromBody] VehicleCreateDto newvehicle)
         {
+            Vehicle vehicle = new Vehicle()
+            {
+                name = newvehicle.name,
+                plate = newvehicle.plate
+            };
             try
             {
                 v_session.BeginTransaction();
@@ -98,8 +106,6 @@ namespace PycApi.Controllers
         {
             Vehicle vehicle = v_session.Vehicles.Where(x => x.Id == id).FirstOrDefault();
 
-            List<Containers> listOfContainer = c_session.Containers.Where(x => x.vehicle == vehicle.Id).ToList();
-
             if (vehicle == null)
             {
                 return NotFound();
@@ -110,11 +116,14 @@ namespace PycApi.Controllers
                 v_session.BeginTransaction();
                 v_session.Delete(vehicle);
                 v_session.Commit();
+
+                List<Containers> listOfContainer = c_session.Containers.Where(x => x.vehicle == vehicle.Id).ToList();
+
                 c_session.BeginTransaction();
-                foreach(var i in listOfContainer)
+                foreach (var i in listOfContainer)
                 {
                     c_session.Delete(i);
-                   
+
                 }
                 c_session.Commit();
 
@@ -131,6 +140,7 @@ namespace PycApi.Controllers
             {
                 v_session.CloseTransaction();
                 c_session.CloseTransaction();
+
             }
 
             return Ok();

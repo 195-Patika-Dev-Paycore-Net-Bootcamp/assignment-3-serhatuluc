@@ -32,7 +32,11 @@ namespace PycApi.Context
 
         public void Rollback()
         {
-            transaction.Rollback();
+            if(transaction!= null)
+            {
+                transaction.Rollback();
+            }
+            
         }
 
         public void CloseTransaction()
