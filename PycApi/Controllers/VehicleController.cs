@@ -14,16 +14,18 @@ namespace PycApi.Controllers
     [Route("api/nhb/[controller]")]
     public class VehicleContoller : ControllerBase
     {
-        private readonly VehicleIMapperSession session;
-        public VehicleContoller(VehicleIMapperSession session)
+        private readonly ContainerIMapperSession c_session;
+        private readonly VehicleIMapperSession v_session;
+        public VehicleContoller(VehicleIMapperSession session, ContainerIMapperSession csession)
         {
-            this.session = session;
+            this.v_session = session;
+            this.c_session = csession;
         }
 
         [HttpGet]
         public List<Vehicle> Get()
         {
-            List<Vehicle> result = session.Vehicles.ToList();
+            List<Vehicle> result = v_session.Vehicles.ToList();
             return result;
         }
 
@@ -31,7 +33,7 @@ namespace PycApi.Controllers
         [HttpGet("{id}")]
         public Vehicle Get(int id)
         {
-            Vehicle result = session.Vehicles.Where(x => x.Id == id).FirstOrDefault();
+            Vehicle result = v_session.Vehicles.Where(x => x.Id == id).FirstOrDefault();
             return result;
         }
 
@@ -40,25 +42,25 @@ namespace PycApi.Controllers
         {
             try
             {
-                session.BeginTransaction();
-                session.Save(vehicle);
-                session.Commit();
+                v_session.BeginTransaction();
+                v_session.Save(vehicle);
+                v_session.Commit();
             }
             catch (Exception ex)
             {
-                session.Rollback();
+                v_session.Rollback();
                 Log.Error(ex, "Vehicle Insert Error");
             }
             finally
             {
-                session.CloseTransaction();
+                v_session.CloseTransaction();
             }
         }
 
         [HttpPut]
         public ActionResult<Vehicle> Put([FromBody] Vehicle request)
         {
-            Vehicle vehicle = session.Vehicles.Where(x => x.Id == request.Id).FirstOrDefault();
+            Vehicle vehicle = v_session.Vehicles.Where(x => x.Id == request.Id).FirstOrDefault();
             if (vehicle == null)
             {
                 return NotFound();
@@ -66,24 +68,24 @@ namespace PycApi.Controllers
 
             try
             {
-                session.BeginTransaction();
+                v_session.BeginTransaction();
 
                 vehicle.name = request.name;
                 vehicle.plate = request.plate;
 
 
-                session.Update(vehicle);
+                v_session.Update(vehicle);
 
-                session.Commit();
+                v_session.Commit();
             }
             catch (Exception ex)
             {
-                session.Rollback();
+                v_session.Rollback();
                 Log.Error(ex, "Vehicle Insert Error");
             }
             finally
             {
-                session.CloseTransaction();
+                v_session.CloseTransaction();
             }
 
 
@@ -94,26 +96,41 @@ namespace PycApi.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Vehicle> Delete(int id)
         {
-            Vehicle book = session.Vehicles.Where(x => x.Id == id).FirstOrDefault();
-            if (book == null)
+            Vehicle vehicle = v_session.Vehicles.Where(x => x.Id == id).FirstOrDefault();
+
+            List<Containers> listOfContainer = c_session.Containers.Where(x => x.vehicle == vehicle.Id).ToList();
+
+            if (vehicle == null)
             {
                 return NotFound();
             }
 
             try
             {
-                session.BeginTransaction();
-                session.Delete(book);
-                session.Commit();
+                v_session.BeginTransaction();
+                v_session.Delete(vehicle);
+                v_session.Commit();
+                c_session.BeginTransaction();
+                foreach(var i in listOfContainer)
+                {
+                    c_session.Delete(i);
+                   
+                }
+                c_session.Commit();
+
+
+
             }
             catch (Exception ex)
             {
-                session.Rollback();
-                Log.Error(ex, "Book Insert Error");
+                v_session.Rollback();
+                c_session.Rollback();
+                Log.Error(ex, "Vehicle Delete Error");
             }
             finally
             {
-                session.CloseTransaction();
+                v_session.CloseTransaction();
+                c_session.CloseTransaction();
             }
 
             return Ok();

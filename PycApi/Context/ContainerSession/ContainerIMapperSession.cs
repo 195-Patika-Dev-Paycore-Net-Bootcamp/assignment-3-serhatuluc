@@ -16,6 +16,6 @@ namespace PycApi.Context
         void Update(Containers entity);
         void Delete(Containers entity);
 
-        IQueryable<Containers> Vehicles { get; }
+        IQueryable<Containers> Containers { get; }
     }
 }

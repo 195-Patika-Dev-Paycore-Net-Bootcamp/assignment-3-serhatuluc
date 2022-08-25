@@ -22,7 +22,7 @@ namespace PycApi.Controllers
         [HttpGet]
         public List<Containers> Get()
         {
-            List<Containers> result = session.Vehicles.ToList();
+            List<Containers> result = session.Containers.ToList();
             return result;
         }
 
@@ -30,7 +30,7 @@ namespace PycApi.Controllers
         [HttpGet("{id}")]
         public Containers Get(int id)
         {
-            Containers result = session.Vehicles.Where(x => x.Id == id).FirstOrDefault();
+            Containers result = session.Containers.Where(x => x.Id == id).FirstOrDefault();
             return result;
         }
 
@@ -57,7 +57,7 @@ namespace PycApi.Controllers
         [HttpPut]
         public ActionResult<Vehicle> Put([FromBody] Containers request)
         {
-            Containers container = session.Vehicles.Where(x => x.Id == request.Id).FirstOrDefault();
+            Containers container = session.Containers.Where(x => x.Id == request.Id).FirstOrDefault();
             if (container == null)
             {
                 return NotFound();
@@ -94,7 +94,7 @@ namespace PycApi.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Containers> Delete(int id)
         {
-            Containers book = session.Vehicles.Where(x => x.Id == id).FirstOrDefault();
+            Containers book = session.Containers.Where(x => x.Id == id).FirstOrDefault();
             if (book == null)
             {
                 return NotFound();

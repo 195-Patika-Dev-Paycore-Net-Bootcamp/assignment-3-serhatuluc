@@ -17,7 +17,7 @@ namespace PycApi.Context
             this.session = session;
         }
 
-        public IQueryable<Containers> Vehicles => session.Query<Containers>();
+        public IQueryable<Containers> Containers => session.Query<Containers>();
 
 
         public void BeginTransaction()
