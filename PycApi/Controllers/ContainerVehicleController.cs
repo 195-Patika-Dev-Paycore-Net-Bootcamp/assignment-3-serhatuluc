@@ -19,6 +19,7 @@ namespace PycApi.Controllers
             this.c_session = csession;
         }
 
+
         [HttpGet("GetContainersByVehicle/{id}")]
         public ActionResult<List<Containers>> GetContainers(int id)
         {
@@ -26,6 +27,7 @@ namespace PycApi.Controllers
             {
                 return NotFound("Vehicle not found");
             }
+            //List of container which has id of vehicle is listed
             List<Containers> result = c_session.GetAll().Where(x => x.vehicle == id).ToList();
             return result;
         }

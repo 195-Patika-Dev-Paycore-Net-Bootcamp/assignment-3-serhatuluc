@@ -8,7 +8,7 @@ using System.Linq;
 namespace PycApi.Controllers
 {
     [ApiController]
-    [Route("api/nhb/[controller]")]
+    [Route("api/v1/[controller]")]
     public class VehicleContoller : ControllerBase
     {
         private readonly IVehicleRepository v_session;
@@ -43,12 +43,13 @@ namespace PycApi.Controllers
         [HttpPost]
         public void Post([FromBody] VehicleCreateDto newvehicle)
         {
+            //Dto is used here to hide id from client
             Vehicle vehicle = new Vehicle()
             {
                 name = newvehicle.name,
                 plate = newvehicle.plate
             };
-            v_session.Update(vehicle);
+            v_session.Add(vehicle);
         }
 
         [HttpPut]
@@ -59,9 +60,12 @@ namespace PycApi.Controllers
             {
                 return NotFound();
             }
+
+            //Attributes are modified
             vehicle.name = request.name;
             vehicle.plate = request.plate;
 
+            //Vehicle is updated
             v_session.Update(vehicle);
             return Ok();
         }
@@ -70,14 +74,20 @@ namespace PycApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            //Vehicle is fetched
             Vehicle vehicle = v_session.GetById(id);
-            List<Containers> listOfContainer = c_session.GetAll().Where(x => x.vehicle == id).ToList();
-            c_session.DeleteAll(listOfContainer);
+
             if (vehicle == null)
             {
                 return NotFound();
             }
 
+            //List of container which has the vehicle id
+            List<Containers> listOfContainer = c_session.GetAll().Where(x => x.vehicle == id).ToList();
+           //Containers are deleted
+            c_session.DeleteAll(listOfContainer);
+
+            //Vehicle is deleted
             v_session.Delete(vehicle);
 
             return Ok();

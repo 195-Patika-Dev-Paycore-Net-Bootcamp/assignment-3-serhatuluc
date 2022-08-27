@@ -68,11 +68,13 @@ namespace PycApi.Controllers
         [HttpPut]
         public ActionResult<Vehicle> Put([FromBody] ContainerUpdateDto request)
         {
+            //Another dto is used here to update vehicle
             Containers container = c_session.GetById(request.Id);
             if(container is null)
             {
                 return NotFound("Container not found");
             }
+            //Conversion of dto is done here.
             container.containerName = request.containerName;
             container.latitude = request.latitude;
             container.longitude = request.longitude;
@@ -84,11 +86,13 @@ namespace PycApi.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Containers> Delete(int id)
         {
+            
             Containers container = c_session.GetById(id);
             if(container is null)
             {
                 return NotFound("Container not found");
             }
+            //Vehicle is deleted 
             c_session.Delete(container);
 
             return Ok();

@@ -52,7 +52,7 @@ namespace PycApi.Mapping
                 x.NotNullable(true); ;
 
             });
-            Table("container");
+            Table("containers");
         }
     }
 }
