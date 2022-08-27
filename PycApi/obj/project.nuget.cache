@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "QdX8hIBAo8lbGmJ3HRzqgjcexXuqc7+MaWbVA853q8EI28vpSxhN2fNBriI22+IpfLja6MmCftvlPbJje4W3+A==",
+  "dgSpecHash": "LpGlIBKySdAwkKedN3h3kLB3c9fuCqHjKjiDvt/f/TrhrrAQY0FwCR7uaBO+7AWS6hqTGZUyGpmxHSY2pHQjqA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Asus\\Desktop\\.Net Bootcamp\\ptk-pyc-webapi-main\\dev3\\PycApi\\PycApi.csproj",
+  "projectFilePath": "C:\\Users\\Asus\\Desktop\\.Net Bootcamp\\ptk-pyc-webapi-main\\dev3 - Kopya\\PycApi\\PycApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Asus\\.nuget\\packages\\antlr3.runtime\\3.5.1\\antlr3.runtime.3.5.1.nupkg.sha512",
     "C:\\Users\\Asus\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",

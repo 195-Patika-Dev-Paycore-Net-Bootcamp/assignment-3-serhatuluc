@@ -12,6 +12,7 @@ namespace PycApi.Mapping
 {
     public class ContainerMap : ClassMapping<Containers>
     {
+        //Mapping of container. Double type is preferred for latitude and longitude
         public ContainerMap()
         {
             Id(x => x.Id, x =>

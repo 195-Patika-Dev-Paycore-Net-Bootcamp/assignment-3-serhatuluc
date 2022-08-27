@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PycApi.Context;
-using PycApi.Context.VehicleSession;
 using PycApi.Model;
 using PycApi.Models_Dto.Dto;
-using Serilog;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,27 +11,30 @@ namespace PycApi.Controllers
     [Route("api/nhb/[controller]")]
     public class VehicleContoller : ControllerBase
     {
-        private readonly ContainerIMapperSession c_session;
-        private readonly VehicleIMapperSession v_session;
-        public VehicleContoller(VehicleIMapperSession session, ContainerIMapperSession csession)
+        private readonly IVehicleRepository v_session;
+        private readonly IContainerRepository c_session;
+        public VehicleContoller(IContainerRepository csession, IVehicleRepository vsession)
         {
-            this.v_session = session;
+            this.v_session = vsession;
             this.c_session = csession;
         }
 
         [HttpGet]
-        public List<Vehicle> Get()
+        public IEnumerable<Vehicle> Get()
         {
-            List<Vehicle> result = v_session.Vehicles.ToList();
-            return result;
+            return v_session.GetAll();
         }
 
 
         [HttpGet("{id}")]
-        public Vehicle Get(int id)
+        public ActionResult<Vehicle> Get(int id)
         {
-            Vehicle result = v_session.Vehicles.Where(x => x.Id == id).FirstOrDefault();
-            return result;
+            Vehicle vehicle = v_session.GetById(id);
+            if (vehicle is null)
+            {
+                return NotFound("Vehicle not found");
+            }
+            return vehicle;
         }
 
 
@@ -48,100 +48,37 @@ namespace PycApi.Controllers
                 name = newvehicle.name,
                 plate = newvehicle.plate
             };
-            try
-            {
-                v_session.BeginTransaction();
-                v_session.Save(vehicle);
-                v_session.Commit();
-            }
-            catch (Exception ex)
-            {
-                v_session.Rollback();
-                Log.Error(ex, "Vehicle Insert Error");
-            }
-            finally
-            {
-                v_session.CloseTransaction();
-            }
+            v_session.Update(vehicle);
         }
 
         [HttpPut]
         public ActionResult<Vehicle> Put([FromBody] Vehicle request)
         {
-            Vehicle vehicle = v_session.Vehicles.Where(x => x.Id == request.Id).FirstOrDefault();
+            Vehicle vehicle = v_session.GetById(request.Id);
             if (vehicle == null)
             {
                 return NotFound();
             }
+            vehicle.name = request.name;
+            vehicle.plate = request.plate;
 
-            try
-            {
-                v_session.BeginTransaction();
-
-                vehicle.name = request.name;
-                vehicle.plate = request.plate;
-
-
-                v_session.Update(vehicle);
-
-                v_session.Commit();
-            }
-            catch (Exception ex)
-            {
-                v_session.Rollback();
-                Log.Error(ex, "Vehicle Insert Error");
-            }
-            finally
-            {
-                v_session.CloseTransaction();
-            }
-
-
+            v_session.Update(vehicle);
             return Ok();
         }
 
 
         [HttpDelete("{id}")]
-        public ActionResult<Vehicle> Delete(int id)
+        public IActionResult Delete(int id)
         {
-            Vehicle vehicle = v_session.Vehicles.Where(x => x.Id == id).FirstOrDefault();
-
+            Vehicle vehicle = v_session.GetById(id);
+            List<Containers> listOfContainer = c_session.GetAll().Where(x => x.vehicle == id).ToList();
+            c_session.DeleteAll(listOfContainer);
             if (vehicle == null)
             {
                 return NotFound();
             }
 
-            try
-            {
-                v_session.BeginTransaction();
-                v_session.Delete(vehicle);
-                v_session.Commit();
-
-                List<Containers> listOfContainer = c_session.Containers.Where(x => x.vehicle == vehicle.Id).ToList();
-
-                c_session.BeginTransaction();
-                foreach (var i in listOfContainer)
-                {
-                    c_session.Delete(i);
-
-                }
-                c_session.Commit();
-
-
-
-            }
-            catch (Exception ex)
-            {
-                v_session.Rollback();
-                c_session.Rollback();
-                Log.Error(ex, "Vehicle Delete Error");
-            }
-            finally
-            {
-                v_session.CloseTransaction();
-                c_session.CloseTransaction();
-
-            }
+            v_session.Delete(vehicle);
 
             return Ok();
         }

@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 namespace PycApi.Models_Dto.Dto
 {
+    //This dto is aimed to use in Create Http method of Vehicle. 
+    //Since id is auto incremented
     public class VehicleCreateDto
     {
         public virtual string name { get; set; }

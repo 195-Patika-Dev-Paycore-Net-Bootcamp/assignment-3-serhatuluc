@@ -1,19 +1,33 @@
-﻿using System;
+﻿using PycApi.Model;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace PycApi.Extensions
 {
     public static class Splitting
     {
-        public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> sourceList, int ListSize)
+        //This extension is used to split a list of container into certain size of sets and returns it as whole list of the sets
+        public static List<List<T>> Split<T>(this List<T> sourceList, int N)
         {
-            while (sourceList.Any())
+            List<List<T>> outerList = new List<List<T>>();
+            for(int i = 0; i < N; i++)
             {
-                yield return sourceList.Take(ListSize);
-                sourceList = sourceList.Skip(ListSize);
+                outerList.Add(new List<T>());
             }
+            outerList = DoSplitting(sourceList, outerList,N);
+            return outerList;
+            
+        }
+
+        public static List<List<T>> DoSplitting<T>(List<T> sourceList, List<List<T>> outerList,int N)
+        {
+            int count = 0;
+            foreach (var i in sourceList)
+            {
+                outerList[count % (N)].Add(i);
+                count++;
+            }
+            return outerList;
         }
     }
 }

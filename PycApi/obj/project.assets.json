@@ -6187,11 +6187,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Asus\\Desktop\\.Net Bootcamp\\ptk-pyc-webapi-main\\dev3\\PycApi\\PycApi.csproj",
+      "projectUniqueName": "C:\\Users\\Asus\\Desktop\\.Net Bootcamp\\ptk-pyc-webapi-main\\dev3 - Kopya\\PycApi\\PycApi.csproj",
       "projectName": "PycApi",
-      "projectPath": "C:\\Users\\Asus\\Desktop\\.Net Bootcamp\\ptk-pyc-webapi-main\\dev3\\PycApi\\PycApi.csproj",
+      "projectPath": "C:\\Users\\Asus\\Desktop\\.Net Bootcamp\\ptk-pyc-webapi-main\\dev3 - Kopya\\PycApi\\PycApi.csproj",
       "packagesPath": "C:\\Users\\Asus\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Asus\\Desktop\\.Net Bootcamp\\ptk-pyc-webapi-main\\dev3\\PycApi\\obj\\",
+      "outputPath": "C:\\Users\\Asus\\Desktop\\.Net Bootcamp\\ptk-pyc-webapi-main\\dev3 - Kopya\\PycApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Asus\\AppData\\Roaming\\NuGet\\NuGet.Config",
